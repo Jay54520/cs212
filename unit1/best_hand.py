@@ -82,4 +82,5 @@ def poker(hands):
     "Return the best hand: poker([hand, ...]) => hand"
     if not hands:
         raise ValueError('Hands must not be empty!')
-    return max(hands, key=hand_rank)
+    max_ranking = max(hand_rank(hand) for hand in hands)
+    return [hand for hand in hands if hand_rank(hand) == max_ranking]

@@ -14,6 +14,7 @@ def test_poker():
     s2 = "2C 3C 4C 5S 6C".split()  # 2-6 straight
     ah = "AS 2S 3S 4S 6C".split()  # A high
     sh = "2S 3S 4S 6C 7D".split()  # 7 high
+    sh2 = "2C 3H 4C 6H 7D".split()  # 7 high
     fkranks = card_ranks(fk)
     tpranks = card_ranks(tp)
 
@@ -35,12 +36,13 @@ def test_poker():
     assert card_ranks(fk) == [9, 9, 9, 9, 7]
     assert card_ranks(fh) == [10, 10, 10, 7, 7]
 
-    assert poker([sf, fk, fh]) == sf
-    assert poker([fk, fh]) == fk
-    assert poker([fh, fh]) == fh
-    assert poker([fh]) == fh
-    assert poker([sf] + 99 * [fh]) == sf
-    assert poker([s1, s2, ah, sh]) == s2
+    assert poker([sf, fk, fh]) == [sf]
+    assert poker([fk, fh]) == [fk]
+    assert poker([fh, fh]) == [fh, fh]
+    assert poker([fh]) == [fh]
+    assert poker([sf] + 99 * [fh]) == [sf]
+    assert poker([s1, s2, ah, sh]) == [s2]
+    assert poker([sh, sh2]) == [sh, sh2]
 
     assert hand_rank(sf) == (8, 10)
     assert hand_rank(fk) == (7, 9, 7)
