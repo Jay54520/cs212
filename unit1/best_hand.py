@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import random
 
 __author__ = 'Simon'
 
@@ -6,6 +7,20 @@ __author__ = 'Simon'
 Select best hand(s) from multiply hands according to 
 Texas hold'em Poker rules.
 """
+
+
+def deal(numhands, n=5, deck=[r+s for r in '23456789TJQKA' for s in 'SHDC']):
+    "Shuffle the deck and deal out numhands n-card hands."
+    if numhands * n > len(deck):
+        raise ValueError('The deck is not enough because there are too many people.')
+    random.shuffle(deck)
+    index = 0
+    results = []
+    while numhands > 0:
+        results += [deck[index: index+n]]
+        index += 5
+        numhands -= 1
+    return results
 
 
 def card_ranks(ranks):
@@ -84,3 +99,6 @@ def poker(hands):
         raise ValueError('Hands must not be empty!')
     max_ranking = max(hand_rank(hand) for hand in hands)
     return [hand for hand in hands if hand_rank(hand) == max_ranking]
+
+print(deal(1))
+print(deal(5, 7))
