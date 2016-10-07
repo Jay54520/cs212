@@ -12,6 +12,7 @@ def card_ranks(ranks):
     """Return a list of ranks, sorted with higher first."""
     ranks = ['--23456789TJQKA'.index(r) for r, s in ranks]
     ranks.sort(reverse=True)
+
     return [5, 4, 3, 2, 1] if (ranks == [14, 5, 4, 3, 2]) else ranks
 
 
@@ -69,7 +70,7 @@ def hand_rank(hand):
         return (4, max(ranks))
     elif kind(3, ranks):
         return (3, kind(3, ranks), ranks)
-    elif two_pair(2, ranks):
+    elif two_pair(ranks):
         return (3, two_pair(2, ranks), ranks)
     elif kind(1, ranks):
         return (1, kind(1, ranks), ranks)
