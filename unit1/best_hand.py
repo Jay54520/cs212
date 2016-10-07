@@ -7,6 +7,15 @@ __author__ = 'Simon'
 Select best hand(s) from multiply hands according to 
 Texas hold'em Poker rules.
 """
+HAND_NAMES = {8: "Straight Flush",
+              7: "4 of a Kind",
+              6: "Full House",
+              5: "Flush",
+              4: "Straight",
+              3: "3 of a Kind",
+              2: '2 Pair',
+              1: "Pair",
+              0: "High Card"}
 
 
 def deal(numhands, n=5, deck=[r+s for r in '23456789TJQKA' for s in 'SHDC']):
@@ -79,8 +88,8 @@ def hand_rank(hand):
     elif kind(3, ranks):
         return (3, kind(3, ranks), ranks)
     elif two_pair(ranks):
-        return (3, two_pair(2, ranks), ranks)
-    elif kind(1, ranks):
+        return (2, two_pair(ranks), ranks)
+    elif kind(2, ranks):
         return (1, kind(1, ranks), ranks)
     else:
         return (0, ranks)
@@ -93,5 +102,19 @@ def poker(hands):
     max_ranking = max(hand_rank(hand) for hand in hands)
     return [hand for hand in hands if hand_rank(hand) == max_ranking]
 
-print(deal(1))
-print(deal(5, 7))
+
+def hand_percentages(n=700*1000):
+    """Sample n random hands and print a table of percentages for each type of hand."""
+    counts = [0] * 9
+    for i in range(n//10):
+        for hand in deal(10):
+            ranking = hand_rank(hand)[0]
+            counts[ranking] += 1
+    for i in reversed(range(0, 9)):
+        print("%14s: %6.4f %%" % (HAND_NAMES[i], 100*counts[i]/n))
+
+
+if __name__ == '__main__':
+    print(deal(1))
+    print(deal(5, 7))
+    hand_percentages()
