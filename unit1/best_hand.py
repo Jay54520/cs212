@@ -14,14 +14,7 @@ def deal(numhands, n=5, deck=[r+s for r in '23456789TJQKA' for s in 'SHDC']):
     if numhands * n > len(deck):
         raise ValueError('The deck is not enough because there are too many people.')
     random.shuffle(deck)
-    index = 0
-    results = []
-    while numhands > 0:
-        results += [deck[index: index+n]]
-        index += 5
-        numhands -= 1
-    return results
-
+    return [deck[n*i:n*(i+1)] for i in range(numhands)]
 
 def card_ranks(ranks):
     """Return a list of ranks, sorted with higher first."""
