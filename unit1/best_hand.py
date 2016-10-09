@@ -73,12 +73,17 @@ def two_pair(ranks):
 
 
 def group(items):
-    """eg: [7, 10, 7, 9, 7] => counte = (3, 1, 1);  ranks = (7, 10, 9)
+    """eg: [7, 10, 7, 9, 7] =>  [(3, 7), (1, 10), (1, 9)] used to generate =>
+    count = (3, 1, 1);  ranks = (7, 10, 9)
     The front tuple describe how many kinds of a poker, the behind describe
     corresponding poker number"""
     items_set = set(items)
     groups = [(items.count(item), item) for item in items_set]
     return sorted(groups, reverse=True)
+
+
+count_rankings = {(5,): 10, (4, 1): 7, (3, 2): 6, (3, 1, 1): 3,
+                  (2, 2, 1): 2, (2, 1, 1, 1): 1, (1, 1, 1, 1, 1): 0}
 
 
 def hand_rank(hand):
@@ -87,15 +92,7 @@ def hand_rank(hand):
     counts, ranks = zip(*groups)
     is_straight = straight(ranks)
     is_flush = flush(hand)
-    return (8 if is_straight and is_flush else
-            7 if (4, 1) == counts else
-            6 if (3, 2) == counts else
-            5 if is_flush else
-            4 if is_straight else
-            3 if (3, 1, 1) == counts else
-            2 if (2, 2, 1) == counts else
-            1 if (2, 1, 1, 1) == counts else
-            0), ranks
+    return max(count_rankings[counts], 4*is_straight + 5*is_flush), ranks
 
 
 def poker(hands):

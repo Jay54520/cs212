@@ -44,6 +44,6 @@ def test_poker():
     assert poker([s1, s2, ah, sh]) == [s2]
     assert poker([sh, sh2]) == [sh, sh2]
 
-    assert hand_rank(sf) == (8, (10, 9, 8, 7, 6))
+    assert hand_rank(sf) == (9, (10, 9, 8, 7, 6))
     assert hand_rank(fk) == (7, (9, 7))
     assert hand_rank(fh) == (6, (10, 7))
