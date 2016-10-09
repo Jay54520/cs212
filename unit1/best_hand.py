@@ -35,7 +35,7 @@ def card_ranks(ranks):
 
 def straight(ranks):
     """Return True if the ordered ranks form a 5-card straight(顺子)"""
-    ranks.sort(reverse=True)
+    ranks = sorted(ranks, reverse=True)
     return all(ranks[i] - 1 == ranks[i+1] for i in range(len(ranks) - 1))
 
 
@@ -72,27 +72,30 @@ def two_pair(ranks):
         return None
 
 
+def group(items):
+    """eg: [7, 10, 7, 9, 7] => counte = (3, 1, 1);  ranks = (7, 10, 9)
+    The front tuple describe how many kinds of a poker, the behind describe
+    corresponding poker number"""
+    items_set = set(items)
+    groups = [(items.count(item), item) for item in items_set]
+    return sorted(groups, reverse=True)
+
+
 def hand_rank(hand):
     """Return a value indicating the ranking of a hand."""
-    ranks = card_ranks(hand)
-    if straight(ranks) and flush(hand):
-        return (8, max(ranks))
-    elif kind(4, ranks):
-        return (7, kind(4, ranks), kind(1, ranks))
-    elif kind(3, ranks) and kind(2, ranks):
-        return (6, kind(3, ranks), kind(2, ranks))
-    elif flush(hand):
-        return (5, ranks)
-    elif straight(ranks):
-        return (4, max(ranks))
-    elif kind(3, ranks):
-        return (3, kind(3, ranks), ranks)
-    elif two_pair(ranks):
-        return (2, two_pair(ranks), ranks)
-    elif kind(2, ranks):
-        return (1, kind(1, ranks), ranks)
-    else:
-        return (0, ranks)
+    groups = group(card_ranks(hand))
+    counts, ranks = zip(*groups)
+    is_straight = straight(ranks)
+    is_flush = flush(hand)
+    return (8 if is_straight and is_flush else
+            7 if (4, 1) == counts else
+            6 if (3, 2) == counts else
+            5 if is_flush else
+            4 if is_straight else
+            3 if (3, 1, 1) == counts else
+            2 if (2, 2, 1) == counts else
+            1 if (2, 1, 1, 1) == counts else
+            0), ranks
 
 
 def poker(hands):
@@ -115,6 +118,4 @@ def hand_percentages(n=700*1000):
 
 
 if __name__ == '__main__':
-    print(deal(1))
-    print(deal(5, 7))
-    hand_percentages()
+    print(hand_rank("6C 7C 8C 9C TC".split()))
