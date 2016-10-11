@@ -100,7 +100,7 @@ def poker(hands):
     if not hands:
         raise ValueError('Hands must not be empty!')
     max_ranking = max(hand_rank(hand) for hand in hands)
-    return [hand for hand in hands if hand_rank(hand) == max_ranking]
+    return [sorted(hand) for hand in hands if hand_rank(hand) == max_ranking]
 
 
 def hand_percentages(n=700*1000):
