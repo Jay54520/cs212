@@ -143,3 +143,22 @@ def instrument_fn(fn, *args, **kwargs):
 if __name__ == '__main__':
     instrument_fn(zebra_puzzle)
     instrument_fn(timedcalls, 100, zebra_puzzle)
+
+"""
+`Summary`
+
+concept inventory
+refine ideas
+simple implementation
+back envelope the scale and the process time
+refine code
+
+`build tools`
+timing
+counting
+
+`aspects`
+separate `result`, `efficient`, `debug`
+
+Make the design as `clean` as possible
+"""
