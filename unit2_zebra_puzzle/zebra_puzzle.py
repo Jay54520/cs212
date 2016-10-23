@@ -27,4 +27,48 @@ their inhabitants are of different national extractions, own different pets, dri
 smoke different brands of American cigarets [sic]. One other thing: in statement 6, right means your right.
 
 — Life International, December 17, 1962
+
+`Analysis`:
+    All possibilities:
+        (5!)^5 is about 2.5 billion
+    Assignment:
+        * house[1].add('red)    set()
+        * house[1].color = 'red'    House() :type: class
+        * red = 1
 """
+import itertools
+
+def imright(h1, h2):
+    """House h1 is imediately right of h2 if h1-h2 == 1"""
+    return h1 - h2 == 1
+
+def next_to(h1, h2):
+    """Two houses are next to each other if they differ by 1"""
+    return abs(h1-h2) == 1
+
+
+def zebra_puzzle():
+    """Return a tuple (WATER, ZEBRRA) indicating their house numbers"""
+    houses = first, _, middle, _, _ = [1, 2, 3, 4, 5]
+    orderings = list(itertools.permutations(houses))
+    return next((WATER, ZEBRA)  # a generator
+            for (red, green, ivory, yellow, blue) in orderings
+            for (Englishman, Spaniard, Ukrainian, Norwegian, Japanese) in orderings
+            for (dog, fox, snails, horse, ZEBRA) in orderings
+            for (coffee, tea, milk, orange_juice, WATER) in orderings
+            for (OldGold, Kools, Chesterfields, LuckyStrike, Parliaments) in orderings
+            if (Englishman is red) #2
+            if (Spaniard is dog)
+            if (coffee is green)
+            if (Ukrainian is tea)
+            if imright(green, ivory)
+            if (OldGold is  snails)
+            if (Kools is yellow)
+            if (milk is middle)
+            if (Norwegian is first)
+            if next_to(Chesterfields, fox)
+            if next_to(Kools, horse)
+            if (LuckyStrike, orange_juice)
+            if (Japanese, Parliaments)
+            if next_to(Norwegian, blue)
+            )
