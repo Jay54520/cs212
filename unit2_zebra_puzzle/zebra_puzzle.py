@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import time
 
 __author__ = 'Simon'
 
@@ -73,5 +74,16 @@ def zebra_puzzle():
             if (Japanese, Parliaments)
             )
 
+
+def func_elapsed_time(func, *args, **kwargs):
+    """Call function with args; return the time in seconds and result"""
+    t0 = time.clock()
+    result = func(*args, **kwargs)
+    t1 = time.clock()
+    return "The result is {result}, elapsed time is {elapsed_time}".format(
+        result=result, elapsed_time=t1-t0
+    )
+
+
 if __name__ == '__main__':
-    print(zebra_puzzle())
+    print(func_elapsed_time(zebra_puzzle))
