@@ -53,22 +53,17 @@ def zebra_puzzle():
     orderings = list(itertools.permutations(houses))
     return next((WATER, ZEBRA)  # a generator
             for (red, green, ivory, yellow, blue) in orderings
-            for (Englishman, Spaniard, Ukrainian, Norwegian, Japanese) in orderings
-            for (dog, fox, snails, horse, ZEBRA) in orderings
-            for (coffee, tea, milk, orange_juice, WATER) in orderings
-            for (OldGold, Kools, Chesterfields, LuckyStrike, Parliaments) in orderings
-            if (Englishman is red) #2
-            if (Spaniard is dog)
-            if (coffee is green)
-            if (Ukrainian is tea)
             if imright(green, ivory)
-            if (OldGold is  snails)
-            if (Kools is yellow)
-            if (milk is middle)
-            if (Norwegian is first)
-            if next_to(Chesterfields, fox)
-            if next_to(Kools, horse)
-            if (LuckyStrike, orange_juice)
-            if (Japanese, Parliaments)
-            if next_to(Norwegian, blue)
+            for (Englishman, Spaniard, Ukrainian, Norwegian, Japanese) in orderings
+            if (Englishman is red) and (Norwegian is first) and next_to(Norwegian, blue)
+            for (dog, fox, snails, horse, ZEBRA) in orderings
+            if (Spaniard is dog)
+            for (coffee, tea, milk, orange_juice, WATER) in orderings
+            if (milk is middle) and (coffee is green) and (Ukrainian is tea)
+            for (OldGold, Kools, Chesterfields, LuckyStrike, Parliaments) in orderings
+            if (OldGold is snails) and (Kools is yellow) and next_to(Chesterfields, fox) and \
+                next_to(Kools, horse) and (LuckyStrike, orange_juice)and (Japanese, Parliaments)
             )
+
+if __name__ == '__main__':
+    print(zebra_puzzle())
