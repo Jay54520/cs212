@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import time
-
+import itertools
 __author__ = 'Simon'
 
 """
@@ -37,15 +37,25 @@ smoke different brands of American cigarets [sic]. One other thing: in statement
         * house[1].color = 'red'    House() :type: class
         * red = 1
 """
-import itertools
+
 
 def imright(h1, h2):
     """House h1 is imediately right of h2 if h1-h2 == 1"""
     return h1 - h2 == 1
 
+
 def next_to(h1, h2):
     """Two houses are next to each other if they differ by 1"""
     return abs(h1-h2) == 1
+
+
+def c(sequence):
+    """Generate items in sequence; keeping counts as we go. c.starts is the
+    number of sequences started; c.items is number of items generated."""
+    c.starts += 1
+    for item in sequence:
+        c.items += 1
+        yield item
 
 
 def zebra_puzzle():
@@ -53,19 +63,19 @@ def zebra_puzzle():
     houses = first, _, middle, _, _ = [1, 2, 3, 4, 5]
     orderings = list(itertools.permutations(houses))
     return next((WATER, ZEBRA)  # a generator
-            for (red, green, ivory, yellow, blue) in orderings
+            for (red, green, ivory, yellow, blue) in c(orderings)
             if imright(green, ivory)
-            for (Englishman, Spaniard, Ukrainian, Norwegian, Japanese) in orderings
+            for (Englishman, Spaniard, Ukrainian, Norwegian, Japanese) in c(orderings)
             if (Englishman is red)
             if (Norwegian is first)
             if next_to(Norwegian, blue)
-            for (dog, fox, snails, horse, ZEBRA) in orderings
+            for (dog, fox, snails, horse, ZEBRA) in c(orderings)
             if (Spaniard is dog)
-            for (coffee, tea, milk, orange_juice, WATER) in orderings
+            for (coffee, tea, milk, orange_juice, WATER) in c(orderings)
             if (milk is middle)
             if (coffee is green)
             if (Ukrainian is tea)
-            for (OldGold, Kools, Chesterfields, LuckyStrike, Parliaments) in orderings
+            for (OldGold, Kools, Chesterfields, LuckyStrike, Parliaments) in c(orderings)
             if (OldGold is snails)
             if (Kools is yellow)
             if next_to(Chesterfields, fox)
@@ -112,6 +122,24 @@ def timedcalls(n, fn, *args, **kwargs):
     return min(times), average(times), max(times)
 
 
+def all_ints():
+    """Generate integers in the order 0, +1, -1, +2, -2, +3, -3, ..."""
+    i = 0
+    yield i
+    while True:
+        i += 1
+        yield i
+        yield -i
+
+
+def instrument_fn(fn, *args, **kwargs):
+    c.starts, c.items = 0, 0  # init the two properties of function `c`
+    result = fn(*args, **kwargs)
+    print('%s got %s with %5d iters over %7ditems' %(
+        fn.__name__, result, c.starts, c.items
+    ))
+
+
 if __name__ == '__main__':
-    print(timedcalls(2.0, zebra_puzzle))
-    print(timedcalls(1000, zebra_puzzle))
+    instrument_fn(zebra_puzzle)
+    instrument_fn(timedcalls, 100, zebra_puzzle)
