@@ -85,5 +85,33 @@ def func_elapsed_time(func, *args, **kwargs):
     )
 
 
+def timedcall(fn, *args, **kwargs):
+    """Call fn(*args, **kwargs); return the time in seconds and result"""
+    t0 = time.clock()
+    result = fn(*args, **kwargs)
+    t1 = time.clock()
+    return result, t1-t0
+
+
+def average(numbers):
+    """Return the average of a sequence of numbers"""
+    return sum(numbers) / float(len(numbers))
+
+
+def timedcalls(n, fn, *args, **kwargs):
+    """Call fn(*args, **kwargs) repeatedly: n times if n is an int, or up to
+    n seconds if n is a float; reeturn the min, avg, and max time."""
+    if isinstance(n, int):
+        times = [timedcall(fn, *args, **kwargs)[1] for _ in range(n)]
+    elif isinstance(n, float):
+        times= []
+        while sum(times) < n:
+            times.append(timedcall(fn, *args, **kwargs)[1])
+    else:
+        raise TypeError("n must be an int or float.")
+    return min(times), average(times), max(times)
+
+
 if __name__ == '__main__':
-    print(func_elapsed_time(zebra_puzzle))
+    print(timedcalls(2.0, zebra_puzzle))
+    print(timedcalls(1000, zebra_puzzle))
