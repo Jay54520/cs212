@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import time
 
-from unit2_zebra_puzzle.cryptarithmetic import solve
+from unit2_zebra_puzzle.cryptarithmetic import faster_solve, compile_word
 from unit2_zebra_puzzle.zebra_puzzle import timedcall
 
 __author__ = 'Simon'
@@ -23,10 +23,15 @@ PLUTO not in set([PLANTS])
 """.splitlines()
 
 
-def test():
+def test_compile_word():
+    assert compile_word('YOU') == '(1*U+10*O+100*Y)'
+    assert compile_word('+') == '+'
+
+
+def test_solve():
     t0 = time.clock()
     for example in examples:
         print(13 * ' ', example)
-        result = timedcall(solve, example)
+        result = timedcall(faster_solve, example)
         print('%6.4f sec: %s ' % (result[1], result[0]))
     print('%6.4f tot.' % (time.clock() - t0))
