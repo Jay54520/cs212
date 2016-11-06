@@ -8,36 +8,31 @@ __author__ = 'Simon'
 """https://en.wikipedia.org/wiki/Verbal_arithmetic"""
 
 
-def fill_in(formula):
-    """return generator of eval string mapped from formula """
+def compile_formula(formula, verbose=False):
+    """Given formula into a function. Also return letters found, as a str,
+    in same order as params of function. For example 'YOU == ME**2' returns
+    (lambda Y, O, U, M, E: (U+10*O+100*Y) == (E+10*M)**2), 'YOUME' """
     letters = ''.join(set(re.findall('[A-Z]', formula)))
-    if len(letters) > 10:
-        raise TypeError("unique letters in formula are greater than 10")
-
-    for digits in itertools.permutations(range(10), len(letters)):
-        table = str.maketrans(letters, ''.join(map(str, digits)))
-        # use yield because you may be lucky finding the answer at first,
-        # then you don't need to calculate the rest of the list
-        yield formula.translate(table)
+    params = ', '.join(letters)
+    tokens = map(compile_word, re.split('([A-Z]+)', formula))
+    body = "".join(tokens)
+    f = 'lambda %s: %s' % (params, body)
+    if verbose: print(f)
+    return eval(f), letters
 
 
-def solve(formula):
+def faster_solve(formula):
     """Given a formula like 'ODD + ODD == EVEN', fill in digits to solve it.
-    Input formula is a string; output is a digit-filled-in string or None."""
-    fs = fill_in(formula)
-    for f in fs:
-        if valid(f):
-            return f
-
-    return None
-
-
-def valid(f):
-    """Formula f is valid if it has not numbers with leading zero, and evals true."""
-    try:
-        return not re.search(r'\b0[0-9]', f) and eval(f) is True
-    except ZeroDivisionError as e:
-        return False
+    Input formula is a string; output is a digit-filled-in string or None.
+    This version precompiles the formula; only one eval per formula"""
+    f, letters = compile_formula(formula)
+    for digits in itertools.permutations(range(10), len(letters)):
+        try:
+            if f(*digits) is True:
+                table = str.maketrans(letters, ''.join(map(str, digits)))
+                return formula.translate(table)
+        except ZeroDivisionError as e:
+            pass
 
 
 def compile_word(word):
@@ -50,9 +45,3 @@ def compile_word(word):
         terms = ['%s*%s' % (10**i, d)
                  for (i, d) in enumerate(word[::-1])]
         return '(' + '+'.join(terms) + ')'
-
-
-if __name__ == '__main__':
-    print(compile_word('YOU'))
-    assert compile_word('YOU') == '(1*U+10*O+100*Y)'
-    assert compile_word('+') == '+'
