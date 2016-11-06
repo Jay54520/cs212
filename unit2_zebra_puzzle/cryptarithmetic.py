@@ -15,7 +15,7 @@ def fill_in(formula):
         raise TypeError("unique letters in formula are greater than 10")
 
     for digits in itertools.permutations(range(10), len(letters)):
-        table = str.maketrans(letters, ''.join("%s" % digit for digit in digits))
+        table = str.maketrans(letters, ''.join(map(str, digits)))
         # use yield because you may be lucky finding the answer at first,
         # then you don't need to calculate the rest of the list
         yield formula.translate(table)
