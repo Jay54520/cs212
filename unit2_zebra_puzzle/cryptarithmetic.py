@@ -38,3 +38,23 @@ def valid(f):
         return not re.search(r'\b0[0-9]', f) and eval(f) is True
     except ZeroDivisionError as e:
         return False
+
+
+def compile_word(word):
+    """Compile a word of uppercase letters as numeric digits.
+    E.g., compile_word('YOU') => '(1*U+10*O+100*Y)'
+    Non-uppercase words unchanged: compile_word('+')=>'+' """
+    if not re.search('[A-Z]', word):
+        return word
+    result = []
+    length = len(word)
+    word = list(reversed(word))
+    for i in range(length):
+        result.append(str(10**i) + '*' + word[i])
+    return "+".join(result)
+
+
+if __name__ == '__main__':
+    print(compile_word('YOU'))
+    assert compile_word('YOU') == '1*U+10*O+100*Y'
+    assert compile_word('+') == '+'
