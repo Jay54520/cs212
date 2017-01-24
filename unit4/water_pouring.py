@@ -32,7 +32,7 @@ def successors(x, y, X, Y):
         # transfer from X --> Y while Y is full
         (0, y + x) if x + y <= Y else (x - (Y - y), Y): 'X->Y',
         # transfer from Y --> X while  is full
-        (x+y, 0) if x + y <= X else (X, y - (X - x)): 'Y->X',
+        (x + y, 0) if x + y <= X else (X, y - (X - x)): 'Y->X',
         (X, y): 'fill X',
         (0, y): 'empty X',
         (x, Y): 'fill Y',
@@ -60,27 +60,20 @@ def pour_problem(X, Y, goal, start=(0, 0)):
     frontier = [[start]]  # how this work? Through all successors
     route = 0
     while frontier:
-        print('frontier: %s' % frontier)
         path = frontier.pop(0)
-        print('path: %s' % path)
         x, y = path[-1]
-        print('x: %s; y: %s' % (x, y))
         for (state, action) in successors(x, y, X, Y).items():
             route += 1
-            print('state: %s; action: %s' % (state, action))
             if state not in explored:
                 explored.add(state)
                 path2 = path + [action, state]
-                print('path2: %s \n\n' % path2)
                 if goal in state:
-                    print('route: %s' % route)
                     return path2
                 else:
                     frontier.append(path2)
-    print('route: %s' % route)
+
     return Fail
 
 
 Fail = []
-print(pour_problem(4, 9, 6))
-
+successors(0, 0, 4, 9)
