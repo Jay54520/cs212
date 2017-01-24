@@ -2,6 +2,7 @@
 
 __author__ = 'Simon'
 
+Fail = []
 
 def bsuccessors(state):
     """Return a dict of {state:action} pairs. A `state` is a (here, there, t) tuple,
@@ -49,17 +50,21 @@ def bridge_problem(here):
 
     while frontier:
         path = frontier.pop(0)
-        for (state, action) in bsuccessors(path[-1]).items():
+        here1, there1, t1 = state1 = path[-1]
+        if not here1 or here1 == set(['light']):
+            # the job is done!
+            return path
+
+        for (state, action) in bsuccessors(state1).items():
             if state not in explored:
                 explored.add(state)
-                here, there, t = state
                 path2 = path + [action, state]
-                if not here:
-                    return path2
-                else:
-                    frontier.append(path2)
-                    frontier.sort(key=elapsed_time)
+                frontier.append(path2)
+                # combine this sort and pop(0) above, so it can
+                # when meet conditions, path will be shortest
+                frontier.sort(key=elapsed_time)
 
+    return Fail
 
 result = bridge_problem([1, 2, 5, 10])
 print(result[1::2])
