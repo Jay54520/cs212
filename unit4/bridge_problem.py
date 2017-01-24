@@ -4,6 +4,14 @@ __author__ = 'Simon'
 
 Fail = []
 
+def elapsed_time(result):
+    return result[-1][-1]
+
+
+def path_actions(result):
+    return result[1::2]
+
+
 def bsuccessors(state):
     """Return a dict of {state:action} pairs. A `state` is a (here, there, t) tuple,
     where `here` and `there` are frozensets of people (indicated by their times) and/or
@@ -67,5 +75,4 @@ def bridge_problem(here):
     return Fail
 
 result = bridge_problem([1, 2, 5, 10])
-print(result[1::2])
 print(result)
