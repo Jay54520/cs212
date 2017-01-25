@@ -62,7 +62,8 @@ def pour_problem(X, Y, goal, start=(0, 0)):
     if goal in start:
         return goal
     frontier = [ [start], ]
-    explored = { start }
+    explored = set()
+    explored.add(start)
     while frontier:
         path = frontier.pop(0)
         x, y = path[-1]
