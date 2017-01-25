@@ -10,14 +10,11 @@ from unit4 import *
 class Test:
     """
     >>> successors(0, 0, 4, 9)
-    # same key in dict will be overwritten
-    {(0, 0): 'empty Y', (4, 0): 'fill X', (0, 9): 'fill Y'}
-    >>> successors(0, 0, 4, 9)
-    {(0, 0): 'empty Y', (4, 0): 'fill X', (0, 9): 'fill Y'}
+    {'fill X': (4, 0), 'Y->X': (0, 0), 'X->Y': (0, 0), 'empty X': (0, 0), 'empty Y': (0, 0), 'fill Y': (0, 9)}
     >>> successors(3, 5, 4, 9)
-    {(0, 8): 'X->Y', (4, 4): 'Y->X', (4, 5): 'fill X', (0, 5): 'empty X', (3, 9): 'fill Y', (3, 0): 'empty Y'}
+    {'fill X': (4, 5), 'Y->X': (4, 4), 'X->Y': (0, 8), 'empty X': (0, 5), 'empty Y': (3, 0), 'fill Y': (3, 9)}
     >>> successors(3, 7, 4, 9)
-    {(1, 9): 'X->Y', (4, 6): 'Y->X', (4, 7): 'fill X', (0, 7): 'empty X', (3, 9): 'fill Y', (3, 0): 'empty Y'}
+    {'fill X': (4, 7), 'Y->X': (4, 6), 'X->Y': (1, 9), 'empty X': (0, 7), 'empty Y': (3, 0), 'fill Y': (3, 9)}
     >>> pour_problem(4, 9, 6)
     [(0, 0), 'fill Y', (0, 9), 'Y->X', (4, 5), 'empty X', (0, 5), 'Y->X', (4, 1), 'empty X', (0, 1), 'Y->X', (1, 0), 'fill Y', (1, 9), 'Y->X', (4, 6)]
     >>> def num_actions(triplet):
