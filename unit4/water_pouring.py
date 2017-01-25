@@ -51,24 +51,18 @@ def successors(x, y, X, Y):
 
 def pour_problem(X, Y, goal, start=(0, 0)):
     """
-    X and Y are the capcity of glasses; (x, y) is current fill
+    X and Y are the capacity of glasses; (x, y) is current fill
     levels and represents a state. The goal is a level that can be in either
     glass. Start at start state and follow successors until we reach
     the goal. Keep track of frontier and previously explored; fail when no
     frontier.
-    :param X: 
-    :param Y: 
-    :param goal: 
-    :param state: 
-    :return: 
     """
     if goal > max(X, Y):
         raise ValueError('goal: %s greater than max(%s, %s)' % (goal, X, Y))
     if goal in start:
         return goal
     frontier = [ [start], ]
-    explored = set()
-    explored.add(start)
+    explored = { start }
     while frontier:
         path = frontier.pop(0)
         x, y = path[-1]
