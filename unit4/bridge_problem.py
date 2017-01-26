@@ -4,12 +4,46 @@ __author__ = 'Simon'
 
 Fail = []
 
-def elapsed_time(result):
-    return result[-1][-1]
+def elapsed_time(path):
+    """
+    return final elapsed_time of this path
+    state: (here, there, elapsed_time)
+    :param path: [ (state), action, (state), action, (state) ......]
+    :return:
+    """
+    return path[-1][-1]
 
 
-def path_actions(result):
-    return result[1::2]
+def path_actions(path):
+    """
+    Return a list of actions  in this path.
+    :param path: [ (state), action, (state), action, (state) ......]
+    :return:
+    """
+    return path[1::2]
+
+
+def path_states(path):
+    """
+    Return a list of states in this path.
+    :param path: [ (state), action, (state), action, (state) ......]
+    :return:
+    """
+    return path[0::2]
+
+
+def bcost(action):
+    """Returns the cost (a number) of an action in the bridge problem."""
+    a, b, arrow = action
+    return max(a, b)
+
+
+def path_cost(path):
+    """The total cost of path (which is stored in a tuple with the final action)."""
+    if len(path) < 3:
+        return 0
+    else:
+        return sum([bcost(action) for action in path_actions(path)])
 
 
 def bsuccessors(state):
@@ -17,62 +51,61 @@ def bsuccessors(state):
     where `here` and `there` are frozensets of people (indicated by their times) and/or
     the `light`, and `t` is a number indicating the elapsed time. Action is represented
     by '->' for here to there and '<-' for there to here.
-    Use `frozensets` because `frozensets` is hashable and two people with same
-     minutes can be considered as same person
+    Use `frozensets` because `frozensets` is hashable. (Each person has a individual speed)
+
+    select two people(if people is same, then indicate one person) from here or there besides `light`
     """
     here, there, t = state
-    result = {}
+    if not here:
+        return here
+    successors = {}
+    # if 'light' in `here`, select two people + 'light'
     if 'light' in here:
         for a in here:
             if a is not 'light':
                 for b in here:
                     if b is not 'light':
-                        result[
-                            (here - frozenset([a, b, 'light']),
-                             there | frozenset([a, b, 'light']),
-                             t + max(a, b)
-                             )] = (a, b, '->')
+                        tmp_fronzenset = frozenset([a, b, 'light'])
+                        successors[(here - tmp_fronzenset, there | tmp_fronzenset, t + max(a, b) )] = ['%s, %s, light ->' % (a, b)]
     else:
         for a in there:
             if a is not 'light':
                 for b in there:
                     if b is not 'light':
-                        result[
-                            (here | frozenset([a, b, 'light']),
-                             there - frozenset([a, b, 'light']),
-                             t + max(a, b)
-                             )] = (a, b, '<-')
-    return result
+                        tmp_fronzenset = frozenset([a, b, 'light'])
+                        successors[(here | tmp_fronzenset, there - tmp_fronzenset, t + max(a, b))] = ['%s, %s, light <-' % (a, b)]
 
-
-def elapsed_time(path):
-    return path[-1][2]
+    return successors
 
 
 def bridge_problem(here):
+    """
+
+    :param here: a individual list represented minutes to pass the bridge
+    :return:
+    """
+    # initialize, the `light` is in `here`
     here = frozenset(here) | frozenset(['light'])
-    explored = set()
     frontier = [ [(here, frozenset(), 0)], ]
+    explored = set()
+
     if not here:
         return frontier[0]
 
     while frontier:
         path = frontier.pop(0)
-        here1, there1, t1 = state1 = path[-1]
-        if not here1 or here1 == set(['light']):
-            # the job is done!
-            return path
-
-        for (state, action) in bsuccessors(state1).items():
+        for state, action in bsuccessors(path[-1]).items():
             if state not in explored:
                 explored.add(state)
                 path2 = path + [action, state]
-                frontier.append(path2)
-                # combine this sort and pop(0) above, so it can
-                # when meet conditions, path will be shortest
-                frontier.sort(key=elapsed_time)
-
-    return Fail
+                here, _, _ = state
+                if not here:
+                    return path2
+                else:
+                    frontier.append(path2)
+                    # sort by elapsed_time, then will return shortest path first
+                    frontier.sort(key=elapsed_time)
 
 result = bridge_problem([1, 2, 5, 10])
 print(result)
+print(bsuccessors( ( frozenset([1, 2, 3, 'light']), frozenset(), 0 ) ))
