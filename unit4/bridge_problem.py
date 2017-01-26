@@ -94,17 +94,20 @@ def bridge_problem(here):
 
     while frontier:
         path = frontier.pop(0)
+        here, _, _ = state1 = path[-1]
+        # test the result later because we will sort after path being
+        # appended
+        if not here:
+            return path
         for state, action in bsuccessors(path[-1]).items():
             if state not in explored:
                 explored.add(state)
                 path2 = path + [action, state]
                 here, _, _ = state
-                if not here:
-                    return path2
-                else:
-                    frontier.append(path2)
-                    # sort by elapsed_time, then will return shortest path first
-                    frontier.sort(key=elapsed_time)
+                frontier.append(path2)
+                # sort by elapsed_time, then will return shortest path first
+                frontier.sort(key=elapsed_time)
+
 
 result = bridge_problem([1, 2, 5, 10])
 print(result)
